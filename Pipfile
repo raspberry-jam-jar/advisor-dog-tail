@@ -29,6 +29,7 @@ sentry-sdk = "*"
 django-extensions = "*"
 django-celery-beat = "*"
 transliterate = "*"
+celery = "*"
 
 [dev-packages]
 "flake8" = "*"
