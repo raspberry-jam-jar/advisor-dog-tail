@@ -41,7 +41,7 @@ docker-compose run --rm web ./manage.py createsuperuser
 | DJANGO_SECRET_KEY | A unique, unpredictable value |
 
 
-### Heroku Setup
+### Server Setup
 Add the following config vars to your Heroku instance:
 
 | Key | Value |
@@ -84,9 +84,4 @@ docker-compose down
 ### Run PSQL
 ```bash
 docker-compose run --rm postgres psql postgres://postgres:@postgres:5432/postgres
-```
-
-### Get the Heroku database connection url
-```bash
-heroku pg:credentials:url DATABASE
 ```
