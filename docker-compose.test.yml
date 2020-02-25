@@ -23,6 +23,7 @@ x-web-environment:
 services:
   postgres:
     image: postgres:alpine
+    env_file: .env
 
   redis:
     image: redis:alpine
