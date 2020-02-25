@@ -20,8 +20,3 @@ class Local(BaseConfiguration):
         # Add the container IP to INTERNAL_IPS
         hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
         INTERNAL_IPS += [ip[:-1] + "1" for ip in ips]
-
-    # Email
-    EMAIL_HOST = "localhost"
-    EMAIL_PORT = 1025
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
