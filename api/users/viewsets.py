@@ -6,7 +6,7 @@ from django_filters import rest_framework as filter_ext
 
 from .models import Account
 from .filters import AccountFilterSet
-from .serializers import AccountSerializer, ReadOnlyAccountSerializer
+from .serializers import AccountSerializer
 
 
 class AccountViewset(
@@ -20,17 +20,9 @@ class AccountViewset(
     """
 
     queryset = Account.objects.order_by("-created").all()
-    serializers = {
-        "list": ReadOnlyAccountSerializer,
-        "retreive": ReadOnlyAccountSerializer,
-        "create": AccountSerializer,
-        "default": ReadOnlyAccountSerializer,
-    }
+    serializer_class = AccountSerializer
     filter_backends = (filters.SearchFilter, filter_ext.DjangoFilterBackend)
     filterset_class = AccountFilterSet
     search_fields = ("email",)
     ordering_fields = ("email", "created")
     ordering = ("-created",)
-
-    def get_serializer_class(self):
-        return self.serializers.get(self.action, self.serializers["default"])
