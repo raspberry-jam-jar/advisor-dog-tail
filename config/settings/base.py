@@ -23,7 +23,6 @@ class BaseConfiguration(Configuration):
         "django_filters",
         "corsheaders",
         "drf_yasg",
-        "django_celery_beat",
     ]
     DJANGO_APPS = [
         "django.contrib.auth",
@@ -61,6 +60,9 @@ class BaseConfiguration(Configuration):
     # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
     USE_TZ = True
 
+    # https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
+    TIME_ZONE = env.str("TIME_ZONE", "UTC")
+
     # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
     SITE_ID = 1
 
@@ -87,10 +89,6 @@ class BaseConfiguration(Configuration):
 
     # Redis
     redis_url = env.str("REDIS_URL", default="redis://redis:6379")
-
-    # Celery
-    CELERY_BROKER_URL = redis_url
-    CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
     # Caches
     CACHES = {
@@ -187,6 +185,9 @@ class BaseConfiguration(Configuration):
             "rest_framework.authentication.TokenAuthentication",
             "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
             "rest_framework_social_oauth2.authentication.SocialAuthentication",
+        ],
+        "DEFAULT_FILTER_BACKENDS": [
+            "django_filters.rest_framework.DjangoFilterBackend"
         ],
         "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
         "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
