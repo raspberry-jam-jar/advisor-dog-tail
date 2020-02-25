@@ -32,7 +32,6 @@ services:
   redis:
     image: redis:alpine
 
-
   web:
     <<: *web-environment
     restart: always

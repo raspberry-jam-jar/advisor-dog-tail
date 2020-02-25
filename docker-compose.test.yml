@@ -36,13 +36,3 @@ services:
     ports:
       - "8000:8000"
     command: scripts/local/run_web.sh
-
-  celery:
-    <<: *web-environment
-    restart: always
-    command: scripts/local/run_celery.sh
-
-  celery-beat:
-    <<: *web-environment
-    restart: always
-    command: scripts/local/run_celery_beat.sh
