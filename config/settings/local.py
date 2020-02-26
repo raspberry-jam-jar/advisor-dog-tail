@@ -10,6 +10,12 @@ class Local(BaseConfiguration):
     # Debug
     DEBUG = True
 
+    # Middleware
+    MIDDLEWARE = BaseConfiguration.MIDDLEWARE
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+
     # https://docs.djangoproject.com/en/dev/ref/settings/#internal-ips
     INTERNAL_IPS = ["127.0.0.1"]
 
