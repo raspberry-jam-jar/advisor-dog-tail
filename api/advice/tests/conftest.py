@@ -1,5 +1,7 @@
 import pytest
 
+from api.users.tests.conftest import django_user  # noqa: F401
+
 from ..viewsets import AdviceViewSet
 
 from .factories import AdviceFactory
