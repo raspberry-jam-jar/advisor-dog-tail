@@ -26,8 +26,7 @@ drf-yasg = {version = "*",extras = ["validation"]}
 django-redis = "*"
 lz4 = "*"
 sentry-sdk = "*"
-celery = "*"
-django-celery-beat = "*"
+django-extensions = "*"
 
 [dev-packages]
 "flake8" = "*"
@@ -41,6 +40,9 @@ django-debug-toolbar = "*"
 black = "*"
 pre-commit = "*"
 watchdog = "*"
+pytest-subtests = "*"
+ipython = "*"
+model-bakery = "*"
 
 [requires]
 python_version = "3.7"
