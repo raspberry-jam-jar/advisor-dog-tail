@@ -23,7 +23,6 @@ class BaseConfiguration(Configuration):
         "django_filters",
         "corsheaders",
         "drf_yasg",
-        "django_celery_beat",
     ]
     DJANGO_APPS = [
         "django.contrib.auth",
@@ -40,7 +39,6 @@ class BaseConfiguration(Configuration):
 
     # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
     MIDDLEWARE = [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
         "corsheaders.middleware.CorsMiddleware",
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -87,10 +85,6 @@ class BaseConfiguration(Configuration):
 
     # Redis
     redis_url = env.str("REDIS_URL", default="redis://redis:6379")
-
-    # Celery
-    CELERY_BROKER_URL = redis_url
-    CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
     # Caches
     CACHES = {
