@@ -36,7 +36,6 @@ django-rest-assured = "*"
 factory-boy = "*"
 django-debug-toolbar = "*"
 black = "*"
-pre-commit = "*"
 watchdog = "*"
 
 [requires]
