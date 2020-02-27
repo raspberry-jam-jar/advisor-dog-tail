@@ -27,6 +27,7 @@ django-redis = "*"
 lz4 = "*"
 sentry-sdk = "*"
 django-extensions = "*"
+transliterate = "*"
 
 [dev-packages]
 "flake8" = "*"
