@@ -51,12 +51,6 @@ Add the following config vars to your Heroku instance:
 | DJANGO_DEFAULT_FROM_EMAIL | The default sender for transactional emails |
 
 
-### OAuth Setup
-1. Visit the project in your web browser: http://localhost:8000/
-2. Login with an admin user.
-3. Register a new application via the OAuth application endpoint: http://localhost:8000/api/v1/auth/oauth/applications/
-
-
 ## Other Tasks
 ### Build Docker
 This is required after every dependency change.
