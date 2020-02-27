@@ -10,23 +10,18 @@ pipenv install --dev
 pipenv shell
 ```
 
-3. Initialize [pre-commit](https://pre-commit.com/):
-```bash
-pre-commit install
-```
-
-4. Create an environment configuration file (.env) with the following contents:
+3. Create an environment configuration file (.env) with the following contents:
 ```
 DJANGO_ALLOWED_HOSTS=*
 DJANGO_SECRET_KEY=local
 ```
 
-5. Run the project:
+4. Run the project:
 ```bash
 docker-compose up
 ```
 
-6. In a new shell, create a super user:
+5. In a new shell, create a super user:
 ```bash
 docker-compose run --rm web ./manage.py createsuperuser
 ```
