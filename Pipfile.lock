@@ -1,7 +1,11 @@
 {
     "_meta": {
         "hash": {
+<<<<<<< HEAD
             "sha256": "7d309dd9e5ce15470b7e8648bedc1c964b00816f1752898eed8da4149f1e8f38"
+=======
+            "sha256": "de9dc083c20cfbcd4c978b0890618e8bcf36d2ba8fd819f1bb4de7ed5803467f"
+>>>>>>> b508351... Add transliterate package.
         },
         "pipfile-spec": 6,
         "requires": {
@@ -677,6 +681,14 @@
                 "sha256:8eb82682871f8d63067b455e2e055c8dd953ca260e791635b58dfe0b73ba1f43"
             ],
             "version": "==2.5.0"
+        },
+        "transliterate": {
+            "hashes": [
+                "sha256:010a5021bf6021689c4fade0985f3f7b3db1f2f16a48a09a56797f171c08ed42",
+                "sha256:bc608e0d48e687db9c2b1d7ea7c381afe0d1849cad216087d8e03d8d06a57c85"
+            ],
+            "index": "pypi",
+            "version": "==1.10.2"
         },
         "uritemplate": {
             "hashes": [
