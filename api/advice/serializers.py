@@ -11,6 +11,8 @@ from api.users.serializers import AccountSerializer
 from api.users.models import Account
 
 from .models import Tag, Advice
+from .models.tag import Tag
+from .models.advice import Advice
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -121,7 +123,7 @@ class ReadOnlyAdviceSerializer(serializers.ModelSerializer):
     """
 
     author = AccountSerializer(read_only=True)
-    tags = TagSerializer(read_only=True, many=True,)
+    tags = TagSerializer(read_only=True, many=True)
 
     class Meta:
         model = Advice
@@ -133,7 +135,7 @@ class UpdateAdviceSerializer(UpdateTagsMixin, serializers.ModelSerializer):
     """Advice model serializer for updating."""
 
     author = AccountSerializer(read_only=True)
-    tags = TagSerializer(many=True,)
+    tags = TagSerializer(many=True)
 
     class Meta:
         model = Advice
