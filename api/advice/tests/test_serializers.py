@@ -2,9 +2,15 @@ import pytest
 
 from model_bakery import baker
 
+from django.forms.models import model_to_dict
+
 from ..models import Advice
-from ..serializers import AdviceSerializer, UpdateAdviceSerializer
-from .factories import AdviceFactory
+from ..serializers import (
+    AdviceSerializer, UpdateAdviceSerializer, TagSerializer
+)
+from ..receivers import add_default_tag  # noqa: F401
+
+from .factories import AdviceFactory, TagFactory
 
 
 # Create your tests here.
@@ -70,3 +76,26 @@ class TestAdviceSerializer:
             assert not Advice.objects.filter(
                 author__email=new_advice.author.email
             ).exists()
+
+    def test_update_advice_tags_using_ru(self, db, the_other_tag):
+        """
+        Update existing advice with a new set of tags
+        """
+        advice = AdviceFactory()
+        tags = [{"title": "видео"}, {"title": "аудио"}, {"title": "текст"}]
+        serializer = AdviceSerializer(advice, data={"tags": tags}, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        lookup_tag_data = list(map(lambda t: t["title"], tags))
+        assert Advice.objects.filter(tags__title__in=lookup_tag_data).exists()
+        assert advice.tags.filter(title__in=lookup_tag_data).count() == len(tags)
+
+
+@pytest.mark.django_db
+class TestTagSerializer:
+    def test_create_model(self, db):
+        tag = TagFactory.build()
+        serializer = TagSerializer(data=model_to_dict(tag))
+        serializer.is_valid(raise_exception=True)
+        model = serializer.save()
+        assert Tag.objects.filter(slug=model.slug).exists()
