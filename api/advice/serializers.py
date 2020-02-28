@@ -3,7 +3,8 @@ import traceback
 from rest_framework import serializers
 from rest_framework.utils import model_meta
 
-from .models import Tag, Advice
+from .models.tag import Tag
+from .models.advice import Advice
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -25,14 +26,14 @@ class AdviceSerializer(serializers.ModelSerializer):
     Advice model serializer.
     """
 
-    tags = TagSerializer(many=True,)
+    tags = TagSerializer(many=True, required=False)
 
     class Meta:
         model = Advice
         fields = ("title", "slug", "tags", "link", "created")
         read_only_fields = ("slug", "created")
 
-    def get_or_create_tags(sefl, manager, values: list):
+    def get_or_create_tags(self, manager, values: list):
         for row in values:
             tag, _ = Tag.objects.get_or_create(title=row["title"])
             manager.add(tag)
