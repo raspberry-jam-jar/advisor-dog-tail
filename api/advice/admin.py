@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Advice, Tag
+from .models.advice import Advice
+from .models.tag import Tag, TagType
 
 
 # Register your models here.
@@ -14,9 +15,13 @@ class AdviceAdmin(admin.ModelAdmin):
     search_fields = ("title", "slug", "link")
 
 
+@admin.register(TagType)
+class TagTypeAdmin(admin.ModelAdmin):
+    list_display = ("title", "slug")
+    search_fields = ("title", "slug")
+
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = (
-        'title', 'slug', 'created'
-    )
-    search_fields = ('title',)
+    list_display = ("title", "slug", "created")
+    search_fields = ("title",)
