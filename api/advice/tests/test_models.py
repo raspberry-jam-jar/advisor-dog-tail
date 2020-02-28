@@ -1,9 +1,7 @@
 import pytest
 
-from model_bakery import baker
-
-from ..receivers import add_default_tag
-from ..models import Advice, Tag
+from ..models.advice import Advice
+from ..models.tag import Tag
 
 from . import factories
 
@@ -12,22 +10,18 @@ from . import factories
 
 @pytest.mark.django_db
 class TestAdviceModel:
-    def test_create_model(self, db, the_other_tag):
+    def test_create_advice(self, db):
         advice = factories.AdviceFactory()
         assert Advice.objects.filter(slug=advice.slug).exists()
-
-    def test_create_model_with_default_tag(self, db, the_other_tag):
-        """
-        Advice instance must be created with a default tag (прочее)
-        using the connected signal handler 
-        """
-        advice = factories.AdviceFactory()
-        assert advice.tags.count() == 1
-        assert advice.tags.first().slug == the_other_tag.slug
 
 
 @pytest.mark.django_db
 class TestTagModel:
-    def test_create_model(self, db):
+    def test_create_tag(self, db):
         tag = factories.TagFactory()
         assert Tag.objects.filter(slug=tag.slug).exists()
+
+    def test_create_tag_with_default_type(self, db, default_tag_type, user_tag):
+        """Tag instance must be created with a default type (prochee)"""
+        tag = factories.TagFactory()
+        assert tag.type == default_tag_type
