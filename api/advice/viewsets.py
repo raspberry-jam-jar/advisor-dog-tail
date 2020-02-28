@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .filters import AdviceSearchFilter
-from .models import Advice
+from .models.advice import Advice
 from .serializers import AdviceSerializer
 
 
@@ -19,11 +19,13 @@ class AdviceViewSet(
     """
 
     queryset = Advice.objects.order_by("-created").all()
+    lookup_field = "slug"
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = AdviceSerializer
     filter_backends = (AdviceSearchFilter,)
     search_fields = (
         "title",
+        "slug",
         "tags__title",
         "tags__slug",
     )
@@ -31,12 +33,12 @@ class AdviceViewSet(
     ordering = "-created"
 
     @action(
-        detail=True,
+        detail=True,  # noqa: W605
         methods=["delete"],
-        url_path=r"tag/(?P<tag_slug>\w{1})",
+        url_path="tag/(?P<tag_slug>\w+)",
         permission_classes=(permissions.IsAuthenticated,),
     )
-    def tag(self, request, tag_slug, pk=None):
+    def tag(self, request, tag_slug, slug=None):
         """
         Remove tag attached to the advice.
         """
