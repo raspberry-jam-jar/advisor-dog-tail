@@ -3,12 +3,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .filters import AdviceSearchFilter
-from .models import Advice
 from .serializers import (
     ReadOnlyAdviceSerializer,
     AdviceSerializer,
     UpdateAdviceSerializer,
 )
+from .models.advice import Advice
 
 
 class AdviceViewSet(
@@ -24,6 +24,7 @@ class AdviceViewSet(
     """
 
     queryset = Advice.objects.order_by("-created").all()
+    lookup_field = "slug"
     permission_classes = (permissions.IsAuthenticated,)
     serializers = {
         "default": ReadOnlyAdviceSerializer,
@@ -34,6 +35,7 @@ class AdviceViewSet(
     filter_backends = (AdviceSearchFilter,)
     search_fields = (
         "title",
+        "slug",
         "tags__title",
         "tags__slug",
     )
@@ -44,12 +46,12 @@ class AdviceViewSet(
         return self.serializers.get(self.action, self.serializers.get("default"))
 
     @action(
-        detail=True,
+        detail=True,  # noqa: W605
         methods=["delete"],
-        url_path=r"tag/(?P<tag_slug>\w{1})",
+        url_path="tag/(?P<tag_slug>\w+)",
         permission_classes=(permissions.IsAuthenticated,),
     )
-    def tag(self, request, tag_slug, pk=None):
+    def tag(self, request, tag_slug, slug=None):
         """
         Remove tag attached to the advice.
         """
