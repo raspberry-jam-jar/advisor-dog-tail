@@ -9,21 +9,7 @@ from rest_framework.utils import model_meta
 
 from api.users.serializers import AccountSerializer
 from api.users.models import Account
-from collections import OrderedDict
-from collections.abc import Mapping
 
-from django.core.exceptions import ValidationError as DjangoValidationError
-from django.db import models
-
-from rest_framework.settings import api_settings
-from rest_framework import serializers
-from rest_framework.utils import model_meta
-from rest_framework.serializers import raise_errors_on_nested_writes, as_serializer_error
-from rest_framework.exceptions import ErrorDetail, ValidationError
-from rest_framework.fields import get_error_detail, set_value
-from rest_framework.fields import (
-    CreateOnlyDefault, CurrentUserDefault, SkipField, empty
-)
 from .models import Tag, Advice
 
 
@@ -34,15 +20,17 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('title','slug',)
+        fields = ('title', 'slug', )
         read_only_fields = ('slug',)
 
+
 class UpdateTagsMixin:
-    def update_tags(sefl, manager, values: list):
+    def update_tags(self, manager, values: list):
         for row in values:
             tag, _ = Tag.objects.get_or_create(title=row['title'])
             manager.add(tag)
         return manager
+
 
 class AccountValidateMixin:
     def validate_author(self, value: OrderedDict):
@@ -50,7 +38,9 @@ class AccountValidateMixin:
         return Account.objects.get_or_create(email=email)[0]
 
 
-class AdviceSerializer(AccountValidateMixin, UpdateTagsMixin, serializers.ModelSerializer):
+class AdviceSerializer(
+    AccountValidateMixin, UpdateTagsMixin, serializers.ModelSerializer
+):
     """
     Advice model serializer.
     """
@@ -59,6 +49,7 @@ class AdviceSerializer(AccountValidateMixin, UpdateTagsMixin, serializers.ModelS
     tags = TagSerializer(
         many=True,
     )
+
     class Meta:
         model = Advice
         fields = ("title", "slug", "link", "author", "tags", "created")
@@ -118,7 +109,7 @@ class AdviceSerializer(AccountValidateMixin, UpdateTagsMixin, serializers.ModelS
         if many_to_many:
             for field_name, value in many_to_many.items():
                 field = getattr(instance, field_name)
-                # if the field is an instance of a related manager which has Tag model               
+                # if the field is an instance of a related manager which has Tag model
                 if field.model and field.model == Tag:
                     field = self.update_tags(field, value)
 
@@ -134,6 +125,7 @@ class ReadOnlyAdviceSerializer(serializers.ModelSerializer):
     tags = TagSerializer(
         read_only=True, many=True,
     )
+
     class Meta:
         model = Advice
         fields = ("title", "slug", "link", "author", "tags", "created")
@@ -149,6 +141,7 @@ class UpdateAdviceSerializer(UpdateTagsMixin, serializers.ModelSerializer):
     tags = TagSerializer(
         many=True,
     )
+
     class Meta:
         model = Advice
         fields = ("title", "slug", "link", "author", "tags", "created")
@@ -175,7 +168,7 @@ class UpdateAdviceSerializer(UpdateTagsMixin, serializers.ModelSerializer):
         # updated instance and we do not want it to collide with .update()
         for attr, value in m2m_fields:
             field = getattr(instance, attr)
-            # if the field is an instance of a related manager which has Tag model               
+            # if the field is an instance of a related manager which has Tag model
             if field.model and field.model == Tag:
                 field = self.update_tags(field, value)
 
