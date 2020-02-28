@@ -3,8 +3,8 @@ import pytest
 from django.forms.models import model_to_dict
 
 from ..serializers import AdviceSerializer, TagSerializer
-from ..receivers import add_default_tag  # noqa: F401
-from ..models import Advice, Tag
+from ..models.advice import Advice
+from ..models.tag import Tag
 
 from .factories import AdviceFactory, TagFactory
 
@@ -16,8 +16,19 @@ class TestAdviceSerializer:
         advice = AdviceFactory.build()
         serializer = AdviceSerializer(data=model_to_dict(advice))
         serializer.is_valid(raise_exception=True)
+        serializer.save()
+        assert Advice.objects.filter(title=advice.title).exists()
+
+    def test_create_advice_with_new_tag(self, db):
+        advice = AdviceFactory.build()
+        tag = TagFactory.build()
+        advice_data = model_to_dict(advice)
+        advice_data["tags"] = [model_to_dict(tag)]
+        serializer = AdviceSerializer(data=advice_data)
+        serializer.is_valid(raise_exception=True)
         model = serializer.save()
-        assert Advice.objects.filter(slug=model.slug).exists()
+        assert Advice.objects.filter(title=advice.title).exists()
+        assert model.tags.count() == 1
 
     def test_update_advice(self, subtests, db):
         advice = AdviceFactory()
@@ -55,7 +66,7 @@ class TestAdviceSerializer:
                 title=advice.title, slug=new_advice.slug
             ).exists()
 
-    def test_update_advice_tags_using_ru(self, db, the_other_tag):
+    def test_update_advice_tags_using_ru(self, db, user_tag):
         """
         Update existing advice with a new set of tags
         """
@@ -71,7 +82,7 @@ class TestAdviceSerializer:
 
 @pytest.mark.django_db
 class TestTagSerializer:
-    def test_create_model(self, db):
+    def test_create_tag(self, db):
         tag = TagFactory.build()
         serializer = TagSerializer(data=model_to_dict(tag))
         serializer.is_valid(raise_exception=True)
