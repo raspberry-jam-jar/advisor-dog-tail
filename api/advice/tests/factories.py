@@ -1,9 +1,20 @@
-import factory
-
 from factory import django as django_factory
 from factory import faker
 
-from ..models import Advice, Tag
+from ..models.advice import Advice
+from ..models.tag import Tag
+
+
+class TagTypeFactory(django_factory.DjangoModelFactory):
+    """
+    Tag type model factory.
+    """
+
+    title = faker.Faker("slug")
+
+    class Meta:
+        model = Tag
+        django_get_or_create = ("title",)
 
 
 class TagFactory(django_factory.DjangoModelFactory):
@@ -11,10 +22,12 @@ class TagFactory(django_factory.DjangoModelFactory):
     Tag model factory
     """
 
-    title = faker.Faker('slug')
+    title = faker.Faker("slug")
+
     class Meta:
         model = Tag
-        django_get_or_create = ('title',)
+        django_get_or_create = ("title",)
+
 
 class AdviceFactory(django_factory.DjangoModelFactory):
     """
