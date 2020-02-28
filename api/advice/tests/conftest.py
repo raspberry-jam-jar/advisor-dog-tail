@@ -3,6 +3,7 @@ import pytest
 from api.users.tests.conftest import django_user  # noqa: F401
 
 from ..viewsets import AdviceViewSet
+from ..models.tag import TagType
 
 from .factories import AdviceFactory, TagFactory
 
@@ -18,5 +19,10 @@ def advice_vs():
 
 
 @pytest.fixture
-def the_other_tag():
-    return TagFactory(title='prochee')
+def user_tag():
+    return TagFactory()
+
+
+@pytest.fixture
+def default_tag_type():
+    return TagType.objects.default()
