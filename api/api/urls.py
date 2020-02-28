@@ -2,6 +2,7 @@ from django.urls import path, re_path, include
 from rest_framework.routers import DefaultRouter
 
 from api.users.routes import router as user_router
+from api.advice.routes import router as advice_router
 
 from .schema import schema_view
 
@@ -10,6 +11,7 @@ from .schema import schema_view
 # E.g.: router.registry.extend(your_router.registry)
 router = DefaultRouter()
 router.registry.extend(user_router.registry)
+router.registry.extend(advice_router.registry)
 
 # API URL configuration
 app_urls = [
