@@ -1,5 +1,8 @@
 import uuid
 
+from transliterate import translit, detect_language
+
+from django.utils import text
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -31,6 +34,14 @@ class TitleSlugModel(models.Model):
 
         See :py:class:`AutoSlugField` for more details.
     """
+
+    def slugify_function(self, content):
+        # if detect_language function returns None
+        # then we can consider the content is written in English
+        language = detect_language(content)
+        if language:
+            content = translit(content, language, reversed=True)
+        return text.slugify(content, True)
 
     title = models.CharField(_("title"), max_length=255)
     slug = AutoSlugField(_("slug"), populate_from="title")
