@@ -1,13 +1,15 @@
 from django.urls import path, re_path, include
 from rest_framework.routers import DefaultRouter
 
+from api.advice.routes import router as advice_router
+
 from .schema import schema_view
 
 
 # Extend this router with your own routes
 # E.g.: router.registry.extend(your_router.registry)
 router = DefaultRouter()
-
+router.registry.extend(advice_router.registry)
 
 # API URL configuration
 app_urls = [
