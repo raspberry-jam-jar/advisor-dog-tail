@@ -61,6 +61,9 @@ class BaseConfiguration(Configuration):
     # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
     USE_TZ = True
 
+    # https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
+    TIME_ZONE = env.str("TIME_ZONE", "UTC")
+
     # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
     SITE_ID = 1
 
