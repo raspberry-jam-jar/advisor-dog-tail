@@ -91,6 +91,10 @@ class BaseConfiguration(Configuration):
     # Redis
     redis_url = env.str("REDIS_URL", default="redis://redis:6379")
 
+    # Celery
+    CELERY_BROKER_URL = redis_url
+    CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
     # Caches
     CACHES = {
         "default": {
