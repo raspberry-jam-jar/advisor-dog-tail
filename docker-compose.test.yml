@@ -9,6 +9,7 @@ x-web-environment:
     - DJANGO_SETTINGS_MODULE=config.settings.test
     - DJANGO_CONFIGURATION=Test
     - DJANGO_SECRET_KEY=nosecret
+    - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
     - POSTGRES_PASSWORD=postgres
   build:
     context: ./
@@ -36,3 +37,13 @@ services:
     ports:
       - "8000:8000"
     command: scripts/local/run_web.sh
+
+  celery:
+    <<: *web-environment
+    restart: always
+    command: scripts/local/run_celery.sh
+
+  celery-beat:
+    <<: *web-environment
+    restart: always
+    command: scripts/local/run_celery_beat.sh
