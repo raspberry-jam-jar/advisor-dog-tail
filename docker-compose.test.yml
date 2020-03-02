@@ -8,7 +8,7 @@ x-web-environment:
     - USING_DOCKER_COMPOSE=true
     - DJANGO_SETTINGS_MODULE=config.settings.test
     - DJANGO_CONFIGURATION=Test
-    - DJANGO_SECRET_KEY
+    - DJANGO_SECRET_KEY=nosecret
     - POSTGRES_PASSWORD=postgres
   build:
     context: ./
