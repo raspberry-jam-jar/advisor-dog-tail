@@ -24,6 +24,7 @@ class BaseConfiguration(Configuration):
         "corsheaders",
         "drf_yasg",
         "django_extensions",
+        "django_celery_beat",
     ]
     DJANGO_APPS = [
         "django.contrib.auth",
@@ -89,6 +90,10 @@ class BaseConfiguration(Configuration):
 
     # Redis
     redis_url = env.str("REDIS_URL", default="redis://redis:6379")
+
+    # Celery
+    CELERY_BROKER_URL = redis_url
+    CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
     # Caches
     CACHES = {
