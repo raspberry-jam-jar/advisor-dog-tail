@@ -9,6 +9,7 @@ x-web-environment:
     - DJANGO_SETTINGS_MODULE=config.settings.test
     - DJANGO_CONFIGURATION=Test
     - DJANGO_SECRET_KEY
+    - POSTGRES_PASSWORD=postgres
   build:
     context: ./
     dockerfile: Dockerfile.local
@@ -23,7 +24,8 @@ x-web-environment:
 services:
   postgres:
     image: postgres:alpine
-
+    environment: 
+      - POSTGRES_PASSWORD=postgres
   redis:
     image: redis:alpine
 
