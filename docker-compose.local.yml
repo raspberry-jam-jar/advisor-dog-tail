@@ -4,10 +4,10 @@ services:
   postgres:
     image: postgres:alpine
     env_file: .env
-    ports: 
+    ports:
       - "5432:5432"
 
   redis:
     image: redis:alpine
-    ports: 
+    ports:
       - "6379:6379"

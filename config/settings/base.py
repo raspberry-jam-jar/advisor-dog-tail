@@ -61,6 +61,9 @@ class BaseConfiguration(Configuration):
     # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
     USE_TZ = True
 
+    # https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
+    TIME_ZONE = env.str("TIME_ZONE", "UTC")
+
     # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
     SITE_ID = 1
 
@@ -170,7 +173,39 @@ class BaseConfiguration(Configuration):
     }
 
     # djoser
+    # https://djoser.readthedocs.io/en/latest/settings.html#serializers
     DJOSER = {"SERIALIZERS": {"user": "api.users.serializers.UserSerializer"}}
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#send-activation-email
+    SEND_ACTIVATION_EMAIL = env.bool("SEND_ACTIVATION_EMAIL", default=False)
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#send-confirmation-email
+    SEND_CONFIRMATION_EMAIL = env.bool("SEND_CONFIRMATION_EMAIL", default=False)
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#password-changed-email-confirmation
+    PASSWORD_CHANGED_EMAIL_CONFIRMATION = env.bool(
+        "PASSWORD_CHANGED_EMAIL_CONFIRMATION", default=False
+    )
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#username-changed-email-confirmation
+    USERNAME_CHANGED_EMAIL_CONFIRMATION = env.bool(
+        "USERNAME_CHANGED_EMAIL_CONFIRMATION", default=False
+    )
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#activation-url
+    ACTIVATION_URL = env.bool("ACTIVATION_URL", default=True)
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#user-create-password-retype
+    USER_CREATE_PASSWORD_RETYPE = env.bool("USER_CREATE_PASSWORD_RETYPE", default=True)
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#set-username-retype
+    SET_USERNAME_RETYPE = env.bool("SET_USERNAME_RETYPE", default=True)
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#set-password-retype
+    SET_PASSWORD_RETYPE = env.bool("SET_PASSWORD_RETYPE", default=True)
+
+    # https://djoser.readthedocs.io/en/latest/settings.html#logout-on-password-change
+    LOGOUT_ON_PASSWORD_CHANGE = env.bool("LOGOUT_ON_PASSWORD_CHANGE", default=True)
 
     # Django Rest Framework Social OAuth2
     # http://python-social-auth.readthedocs.io/en/latest/configuration/django.html#database

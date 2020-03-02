@@ -41,6 +41,7 @@ django-debug-toolbar = "*"
 black = "*"
 pre-commit = "*"
 watchdog = "*"
+pytest-freezegun = "*"
 
 [requires]
 python_version = "3.7"
