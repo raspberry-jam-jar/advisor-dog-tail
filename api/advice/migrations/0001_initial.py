@@ -51,6 +51,7 @@ class Migration(migrations.Migration):
                     django_extensions.db.fields.AutoSlugField(
                         blank=True,
                         editable=False,
+                        overwrite=True,
                         populate_from="title",
                         verbose_name="slug",
                     ),
