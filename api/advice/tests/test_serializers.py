@@ -50,7 +50,7 @@ class TestAdviceSerializer:
                 assert Advice.objects.filter(**field_data).exists()
 
         # Editing should be forbidden
-        for field in ("link", "slug", "author"):
+        for field in ("link", "slug"):
             with subtests.test(msg=f"test_edit_{field}", i=field):
                 advice = baker.make(Advice)
                 field_data = {field: getattr(new_advice, field)}
@@ -60,3 +60,13 @@ class TestAdviceSerializer:
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
                 assert not Advice.objects.filter(**field_data).exists()
+
+        with subtests.test(msg="test_edit_author", i=new_advice.author.email):
+            advice = baker.make(Advice)
+            field_data = {"author": {"email": new_advice.author.email}}
+            serializer = UpdateAdviceSerializer(advice, data=field_data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            assert not Advice.objects.filter(
+                author__email=new_advice.author.email
+            ).exists()
