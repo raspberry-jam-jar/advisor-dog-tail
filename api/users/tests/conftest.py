@@ -14,7 +14,7 @@ def account_vs():
 
 
 @pytest.fixture
-def user():
+def django_user():
     """
     The factory for making a standard user model.
     """
