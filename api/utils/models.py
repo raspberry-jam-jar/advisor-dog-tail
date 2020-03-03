@@ -44,7 +44,7 @@ class TitleSlugModel(models.Model):
         return text.slugify(content, True)
 
     title = models.CharField(_("title"), max_length=255)
-    slug = AutoSlugField(_("slug"), populate_from="title")
+    slug = AutoSlugField(_("slug"), overwrite=True, populate_from="title")
 
     class Meta:
         abstract = True
