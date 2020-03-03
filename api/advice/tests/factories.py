@@ -1,5 +1,8 @@
 from factory import django as django_factory
 from factory import faker
+from factory import SubFactory
+
+from api.users.tests import factories
 
 from ..models import Advice
 
@@ -11,6 +14,7 @@ class AdviceFactory(django_factory.DjangoModelFactory):
 
     title = faker.Faker("name")
     link = faker.Faker("uri")
+    author = SubFactory(factories.AccountFactory)
 
     class Meta:
         model = Advice
