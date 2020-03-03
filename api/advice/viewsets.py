@@ -1,10 +1,11 @@
-from rest_framework import mixins
-from rest_framework import viewsets
-
-from rest_framework import filters
+from rest_framework import mixins, viewsets, filters, permissions
 
 from .models import Advice
-from .serializers import AdviceSerializer
+from .serializers import (
+    ReadOnlyAdviceSerializer,
+    AdviceSerializer,
+    UpdateAdviceSerializer,
+)
 
 
 class AdviceViewSet(
@@ -12,6 +13,7 @@ class AdviceViewSet(
     mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     """
@@ -19,8 +21,17 @@ class AdviceViewSet(
     """
 
     queryset = Advice.objects.order_by("-created").all()
-    serializer_class = AdviceSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    serializers = {
+        "default": ReadOnlyAdviceSerializer,
+        "create": AdviceSerializer,
+        "update": UpdateAdviceSerializer,
+        "partial_update": UpdateAdviceSerializer,
+    }
     filter_backends = (filters.SearchFilter,)
     search_fields = ("title",)
     ordering_fields = ("title", "created")
     ordering = "-created"
+
+    def get_serializer_class(self):
+        return self.serializers.get(self.action, self.serializers.get("default"))
