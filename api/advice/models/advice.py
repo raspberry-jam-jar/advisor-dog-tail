@@ -1,4 +1,5 @@
 from django.db import models
+
 from django.utils.translation import gettext_lazy as _
 
 from model_utils.models import TimeStampedModel
@@ -18,6 +19,7 @@ class Advice(UUIDModel, TitleSlugModel, TimeStampedModel):
         "users.Account",
         on_delete=models.PROTECT,
         verbose_name=_("author of the advice"),
+    )
     tags = models.ManyToManyField(
         Tag, blank=True, through="Mapping", verbose_name=_("advice's tags")
     )
