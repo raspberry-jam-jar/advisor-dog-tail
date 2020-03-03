@@ -112,7 +112,7 @@ class UpdateAdviceSerializer(serializers.ModelSerializer):
     Advice model serializer for updating.
     """
 
-    author = AccountSerializer()
+    author = AccountSerializer(required=False)
 
     class Meta:
         model = Advice
