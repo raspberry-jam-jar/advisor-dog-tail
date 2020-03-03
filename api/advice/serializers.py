@@ -31,6 +31,10 @@ class AdviceSerializer(AccountValidateMixin, serializers.ModelSerializer):
         fields = ("title", "slug", "link", "author", "created")
         read_only_fields = ("slug", "created")
 
+    def validate_author(self, value: OrderedDict):
+        email = BaseUserManager.normalize_email(value["email"])
+        return Account.objects.get_or_create(email=email)[0]
+
     def create(self, validated_data):
         """
         We have a bit of extra checking around this in order to provide
@@ -108,7 +112,7 @@ class UpdateAdviceSerializer(serializers.ModelSerializer):
     Advice model serializer for updating.
     """
 
-    author = AccountSerializer(read_only=True)
+    author = AccountSerializer()
 
     class Meta:
         model = Advice
