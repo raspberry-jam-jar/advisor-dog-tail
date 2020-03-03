@@ -1,11 +1,7 @@
 {
     "_meta": {
         "hash": {
-<<<<<<< HEAD
-            "sha256": "7d309dd9e5ce15470b7e8648bedc1c964b00816f1752898eed8da4149f1e8f38"
-=======
-            "sha256": "de9dc083c20cfbcd4c978b0890618e8bcf36d2ba8fd819f1bb4de7ed5803467f"
->>>>>>> b508351... Add transliterate package.
+            "sha256": "ec5e6db9f738766cea59efc01d0840a9bbbcafea3109d338566eb121259f729d"
         },
         "pipfile-spec": 6,
         "requires": {
