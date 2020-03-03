@@ -13,7 +13,13 @@ from api.users.models import Account
 from .models import Advice
 
 
-class AdviceSerializer(serializers.ModelSerializer):
+class AccountValidateMixin:
+    def validate_author(self, value: OrderedDict):
+        email = BaseUserManager.normalize_email(value["email"])
+        return Account.objects.get_or_create(email=email)[0]
+
+
+class AdviceSerializer(AccountValidateMixin, serializers.ModelSerializer):
     """
     Advice model serializer.
     """
@@ -24,10 +30,6 @@ class AdviceSerializer(serializers.ModelSerializer):
         model = Advice
         fields = ("title", "slug", "link", "author", "created")
         read_only_fields = ("slug", "created")
-
-    def validate_author(self, value: OrderedDict):
-        email = BaseUserManager.normalize_email(value["email"])
-        return Account.objects.get_or_create(email=email)[0]
 
     def create(self, validated_data):
         """
@@ -106,9 +108,9 @@ class UpdateAdviceSerializer(serializers.ModelSerializer):
     Advice model serializer for updating.
     """
 
-    author = AccountSerializer(required=False)
+    author = AccountSerializer(read_only=True)
 
     class Meta:
         model = Advice
         fields = ("title", "slug", "link", "author", "created")
-        read_only_fields = ("slug", "link", "author", "created")
+        read_only_fields = ("slug", "link", "created")
