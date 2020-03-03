@@ -12,6 +12,11 @@ class Advice(UUIDModel, TitleSlugModel, TimeStampedModel):
     """
 
     link = models.URLField(_("uri link"))
+    author = models.ForeignKey(
+        "users.Account",
+        on_delete=models.PROTECT,
+        verbose_name=_("author of the advice"),
+    )
 
     def __str__(self):
         return self.title
