@@ -12,7 +12,7 @@ class BaseConfiguration(Configuration):
     env = environ.Env()
 
     # Apps
-    LOCAL_APPS = ["api.api", "api.users", "api.utils"]
+    LOCAL_APPS = ["api.api", "api.users", "api.advice", "api.utils"]
     THIRD_PARTY_APPS = [
         "rest_framework",
         "rest_framework.authtoken",
@@ -23,6 +23,7 @@ class BaseConfiguration(Configuration):
         "django_filters",
         "corsheaders",
         "drf_yasg",
+        "django_extensions",
         "django_celery_beat",
     ]
     DJANGO_APPS = [
@@ -40,7 +41,6 @@ class BaseConfiguration(Configuration):
 
     # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
     MIDDLEWARE = [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
         "corsheaders.middleware.CorsMiddleware",
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
