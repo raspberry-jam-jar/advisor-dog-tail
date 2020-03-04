@@ -7,10 +7,8 @@ from .models.tag import Tag
 
 @receiver(post_save, sender=Advice)
 def add_default_tag(sender, instance, created, **kwargs):
-    """
-    Try to add default tag to the advice model
-    if it doesn't have any
-    """
-    if not instance.tags.exists():
-        # Add tag prochee by default
+    """Add default tag in case of none of them has the advice instance."""
+    if instance.tags.count() < 1:
         instance.tags.add(Tag.objects.default())
+    elif instance.tags.count() > 1:
+        instance.tags.filter(slug=Tag.objects.default().slug).delete()
