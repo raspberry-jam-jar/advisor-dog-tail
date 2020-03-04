@@ -10,7 +10,30 @@ from rest_framework.utils import model_meta
 from api.users.serializers import AccountSerializer
 from api.users.models import Account
 
-from .models import Advice
+from .models.tag import Tag
+from .models.advice import Advice
+
+
+class TagSerializer(serializers.ModelSerializer):
+    """
+    Advice tag serializer.
+    """
+
+    class Meta:
+        model = Tag
+        fields = (
+            "title",
+            "slug",
+        )
+        read_only_fields = ("slug",)
+
+
+class UpdateTagsMixin:
+    def update_tags(self, manager, values: list):
+        for row in values:
+            tag, _ = Tag.objects.get_or_create(title=row["title"])
+            manager.add(tag)
+        return manager
 
 
 class AccountValidateMixin:
@@ -19,17 +42,24 @@ class AccountValidateMixin:
         return Account.objects.get_or_create(email=email)[0]
 
 
-class AdviceSerializer(AccountValidateMixin, serializers.ModelSerializer):
-    """
-    Advice model serializer.
-    """
+class AdviceSerializer(
+    AccountValidateMixin, UpdateTagsMixin, serializers.ModelSerializer
+):
+    """Advice model serializer."""
 
     author = AccountSerializer()
+    tags = TagSerializer(many=True, required=False)
 
     class Meta:
         model = Advice
-        fields = ("title", "slug", "link", "author", "created")
-        read_only_fields = ("slug", "created")
+        fields = ("title", "slug", "link", "author", "tags", "created")
+        read_only_fields = (
+            "slug",
+            "created",
+        )
+
+    def validate_author(self, value: OrderedDict):
+        return super().validate_author(value)
 
     def create(self, validated_data):
         """
@@ -85,7 +115,12 @@ class AdviceSerializer(AccountValidateMixin, serializers.ModelSerializer):
         if many_to_many:
             for field_name, value in many_to_many.items():
                 field = getattr(instance, field_name)
-                field.set(value)
+                # if the field is an instance of a related manager which has Tag model
+                if field.model and field.model == Tag:
+                    field = self.update_tags(field, value)
+
+        # Call save again in order to try to clear the default tag
+        instance.save()
 
         return instance
 
@@ -95,22 +130,52 @@ class ReadOnlyAdviceSerializer(serializers.ModelSerializer):
     Read-only Advice model serializer.
     """
 
-    author = AccountSerializer()
-
-    class Meta:
-        model = Advice
-        fields = ("title", "slug", "link", "author", "created")
-        read_only_fields = ("title", "slug", "link", "author" "created")
-
-
-class UpdateAdviceSerializer(serializers.ModelSerializer):
-    """
-    Advice model serializer for updating.
-    """
-
     author = AccountSerializer(read_only=True)
+    tags = TagSerializer(read_only=True, many=True)
 
     class Meta:
         model = Advice
-        fields = ("title", "slug", "link", "author", "created")
+        fields = ("title", "slug", "link", "author", "tags", "created")
+        read_only_fields = ("title", "slug", "link", "author", "tags", "created")
+
+
+class UpdateAdviceSerializer(UpdateTagsMixin, serializers.ModelSerializer):
+    """Advice model serializer for updating."""
+
+    author = AccountSerializer(read_only=True, required=False)
+    tags = TagSerializer(many=True, required=False)
+
+    class Meta:
+        model = Advice
+        fields = ("title", "slug", "link", "author", "tags", "created")
         read_only_fields = ("slug", "link", "created")
+
+    def update(self, instance, validated_data):
+        info = model_meta.get_field_info(instance)
+
+        # Simply set each attribute on the instance, and then save it.
+        # Note that unlike `.create()` we don't need to treat many-to-many
+        # relationships as being a special case. During updates we already
+        # have an instance pk for the relationships to be associated with.
+        m2m_fields = []
+        for attr, value in validated_data.items():
+            if attr in info.relations and info.relations[attr].to_many:
+                m2m_fields.append((attr, value))
+            else:
+                setattr(instance, attr, value)
+
+        instance.save()
+
+        # Note that many-to-many fields are set after updating instance.
+        # Setting m2m fields triggers signals which could potentially change
+        # updated instance and we do not want it to collide with .update()
+        for attr, value in m2m_fields:
+            field = getattr(instance, attr)
+            # if the field is an instance of a related manager which has Tag model
+            if field.model and field.model == Tag:
+                field = self.update_tags(field, value)
+
+        # Call save again in order to try to clear the default tag
+        instance.save()
+
+        return instance

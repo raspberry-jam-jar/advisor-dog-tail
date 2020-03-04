@@ -1,6 +1,6 @@
 # Advisor Dog Tail
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
-
+[![Build Status](https://travis-ci.com/yakm-rgb/advisor-dog-tail.svg?branch=master)](https://travis-ci.com/yakm-rgb/advisor-dog-tail)
 
 ## Requirements
 - Docker
