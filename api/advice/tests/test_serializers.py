@@ -4,9 +4,7 @@ from model_bakery import baker
 
 from django.forms.models import model_to_dict
 
-from ..serializers import (
-    AdviceSerializer, UpdateAdviceSerializer, TagSerializer
-)
+from ..serializers import AdviceSerializer, UpdateAdviceSerializer, TagSerializer
 from ..models.advice import Advice
 from ..models.tag import Tag
 
@@ -28,16 +26,47 @@ class TestAdviceSerializer:
         serializer.save()
         assert Advice.objects.filter(title=advice.title).exists()
 
+    def test_create_advice_with_default_tag(self, db, default_tag):
+        from ..receivers import add_default_tag  # noqa: F401
+
+        advice = AdviceFactory.build()
+        advice_data = model_to_dict(advice)
+        advice_data["author"] = {"email": advice.author.email}
+        serializer = AdviceSerializer(data=advice_data)
+        serializer.is_valid(raise_exception=True)
+        model = serializer.save()
+        assert Advice.objects.filter(title=advice.title).exists()
+        assert model.tags.count() == 1
+        assert model.tags.first().title == default_tag.title
+
+    def test_create_advice_with_existing_tag(self, db, user_tag):
+        from ..receivers import add_default_tag  # noqa: F401
+
+        advice = AdviceFactory.build()
+        advice_data = model_to_dict(advice)
+        advice_data["author"] = {"email": advice.author.email}
+        advice_data["tags"] = [model_to_dict(user_tag)]
+        serializer = AdviceSerializer(data=advice_data)
+        serializer.is_valid(raise_exception=True)
+        model = serializer.save()
+        assert Advice.objects.filter(title=advice.title).exists()
+        assert model.tags.count() == 1
+        assert model.tags.first().title == user_tag.title
+
     def test_create_advice_with_new_tag(self, db):
+        from ..receivers import add_default_tag  # noqa: F401
+
         advice = AdviceFactory.build()
         tag = TagFactory.build()
         advice_data = model_to_dict(advice)
+        advice_data["author"] = {"email": advice.author.email}
         advice_data["tags"] = [model_to_dict(tag)]
         serializer = AdviceSerializer(data=advice_data)
         serializer.is_valid(raise_exception=True)
         model = serializer.save()
         assert Advice.objects.filter(title=advice.title).exists()
         assert model.tags.count() == 1
+        assert model.tags.first().title == tag.title
 
     def test_update_advice(self, subtests, db):
         advice = AdviceFactory()
@@ -94,7 +123,7 @@ class TestAdviceSerializer:
         """
         advice = AdviceFactory()
         tags = [{"title": "видео"}, {"title": "аудио"}, {"title": "текст"}]
-        serializer = AdviceSerializer(advice, data={"tags": tags}, partial=True)
+        serializer = UpdateAdviceSerializer(advice, data={"tags": tags}, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         lookup_tag_data = list(map(lambda t: t["title"], tags))
