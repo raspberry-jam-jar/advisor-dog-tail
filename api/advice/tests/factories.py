@@ -1,8 +1,4 @@
-from factory import (
-    django as django_factory,
-    faker,
-    SubFactory
-)
+from factory import django as django_factory, faker, SubFactory
 
 from api.users.tests import factories
 
