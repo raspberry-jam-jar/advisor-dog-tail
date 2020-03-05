@@ -1,7 +1,7 @@
 import pytest
 
 from api.advice.tests.conftest import advice  # noqa: F401
-from api.users.tests.conftest import django_user  # noqa: F401
+from api.users.tests.conftest import django_user, account  # noqa: F401
 
 from ..viewsets import CommentViewSet
 from .factories import CommentFactory
