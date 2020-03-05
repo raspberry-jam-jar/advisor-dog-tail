@@ -21,9 +21,7 @@ def run_tag_fixture(apps: apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ("advice", "0001_initial"),
-    ]
+    dependencies = [("advice", "0001_initial")]
 
     operations = [
         migrations.CreateModel(
