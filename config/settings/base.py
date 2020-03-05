@@ -1,5 +1,6 @@
 import environ
 from configurations import Configuration
+from celery.schedules import crontab
 
 
 class BaseConfiguration(Configuration):
@@ -12,7 +13,7 @@ class BaseConfiguration(Configuration):
     env = environ.Env()
 
     # Apps
-    LOCAL_APPS = ["api.api", "api.users", "api.advice", "api.utils"]
+    LOCAL_APPS = ["api.api", "api.users", "api.advice", "api.comment", "api.utils"]
     THIRD_PARTY_APPS = [
         "rest_framework",
         "rest_framework.authtoken",
@@ -94,6 +95,13 @@ class BaseConfiguration(Configuration):
     # Celery
     CELERY_BROKER_URL = redis_url
     CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+    CELERY_BEAT_SCHEDULE = {
+        # Executes every 6 hours
+        "advice_mean_scores": {
+            "task": "calculate_advice_mean_scores",
+            "schedule": crontab(hour="*/6"),
+        },
+    }
 
     # Caches
     CACHES = {
