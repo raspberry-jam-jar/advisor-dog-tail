@@ -127,7 +127,7 @@ class TestCommentViewset:
         CommentFactory.create_batch(5, advice=advice)
         request = request_factory.get(f"/comments/advice/{advice.slug}/")
         force_authenticate(request, user=django_user)
-        response = comment_vs.as_view({"get": "comments"})(
+        response = comment_vs.as_view({"get": "for_advice"})(
             request, advice_slug=advice.slug
         )
         assert response.status_code == HTTPStatus.OK
