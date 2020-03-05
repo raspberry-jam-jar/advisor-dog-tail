@@ -18,9 +18,6 @@ class BaseConfiguration(Configuration):
         "rest_framework",
         "rest_framework.authtoken",
         "djoser",
-        "oauth2_provider",
-        "social_django",
-        "rest_framework_social_oauth2",
         "django_filters",
         "corsheaders",
         "drf_yasg",
@@ -156,8 +153,6 @@ class BaseConfiguration(Configuration):
                     "django.template.context_processors.request",
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
-                    "social_django.context_processors.backends",
-                    "social_django.context_processors.login_redirect",
                 ]
             },
         }
@@ -170,15 +165,9 @@ class BaseConfiguration(Configuration):
 
     # Authentication
     AUTHENTICATION_BACKENDS = [
-        "rest_framework_social_oauth2.backends.DjangoOAuth2",
         "django.contrib.auth.backends.ModelBackend",
     ]
     PASSWORD_HASHERS = ["django.contrib.auth.hashers.Argon2PasswordHasher"]
-
-    # django-oauth-toolkit
-    OAUTH2_PROVIDER = {
-        "OAUTH2_BACKEND_CLASS": "oauth2_provider.oauth2_backends.JSONOAuthLibCore"
-    }
 
     # djoser
     # https://djoser.readthedocs.io/en/latest/settings.html#serializers
@@ -228,8 +217,6 @@ class BaseConfiguration(Configuration):
         "DEFAULT_AUTHENTICATION_CLASSES": [
             "rest_framework.authentication.SessionAuthentication",
             "rest_framework.authentication.TokenAuthentication",
-            "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
-            "rest_framework_social_oauth2.authentication.SocialAuthentication",
         ],
         "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
         "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
