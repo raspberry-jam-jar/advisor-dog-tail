@@ -10,6 +10,7 @@ class AdviceAdmin(admin.ModelAdmin):
     list_display = (
         "title",
         "slug",
+        "score",
         "created",
     )
     search_fields = ("title", "slug", "link")
