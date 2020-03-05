@@ -20,10 +20,7 @@ app_urls = [
     # API
     path("", include(router.urls)),
     # API Authentication
-    path("auth/", include("djoser.urls")),
     path("auth/", include("djoser.urls.authtoken")),
-    path("auth/oauth/", include("rest_framework_social_oauth2.urls")),
-    path("auth/oauth/", include("oauth2_provider.urls")),
 ]
 
 
