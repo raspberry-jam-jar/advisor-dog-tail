@@ -37,10 +37,10 @@ class CommentViewSet(
     @action(
         detail=False,
         methods=["GET"],
-        url=r"advice/(?P<advice_slug>\w+)",
-        permissions_classes=(permissions.IsAuthenticated,),
+        url_path=r"for/(?P<advice_slug>\w+)",
+        permission_classes=(permissions.IsAuthenticated,),
     )
-    def comments(self, request, advice_slug):
+    def for_advice(self, request, advice_slug):
         """
         Get paginated set of comments for the passed advice
         """
