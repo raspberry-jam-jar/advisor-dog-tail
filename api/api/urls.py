@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from api.users.routes import router as user_router
 from api.advice.routes import router as advice_router
+from api.comment.routes import router as comment_router
 
 from .schema import schema_view
 
@@ -12,6 +13,7 @@ from .schema import schema_view
 router = DefaultRouter()
 router.registry.extend(user_router.registry)
 router.registry.extend(advice_router.registry)
+router.registry.extend(comment_router.registry)
 
 # API URL configuration
 app_urls = [

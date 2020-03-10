@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from model_utils.models import TimeStampedModel
 
@@ -19,6 +20,13 @@ class Advice(UUIDModel, TitleSlugModel, TimeStampedModel):
         "users.Account",
         on_delete=models.PROTECT,
         verbose_name=_("author of the advice"),
+    )
+    score = models.DecimalField(
+        verbose_name=_("the advice score among users who left a comment"),
+        validators=[MinValueValidator(0.0), MaxValueValidator(10.0),],  # noqa: E231
+        default=0.0,
+        max_digits=5,
+        decimal_places=3,
     )
     tags = models.ManyToManyField(
         Tag, blank=True, through="Mapping", verbose_name=_("advice's tags")

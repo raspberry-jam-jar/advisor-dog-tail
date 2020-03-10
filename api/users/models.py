@@ -77,6 +77,9 @@ class Account(UUIDModel, TimeStampedModel):
         error_messages={"unique": _("A user with that email already exists.")},
     )
 
+    def __str__(self):
+        return self.email
+
     class Meta:
         verbose_name = _("account")
         verbose_name_plural = _("accounts")

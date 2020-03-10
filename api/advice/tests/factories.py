@@ -1,9 +1,8 @@
-from factory import django as django_factory, faker, SubFactory
-
+from factory import django as django_factory, faker, SubFactory, fuzzy
 from api.users.tests import factories
 
 from ..models.advice import Advice
-from ..models.tag import Tag
+from ..models.tag import TagType, Tag
 
 
 class TagTypeFactory(django_factory.DjangoModelFactory):
@@ -14,7 +13,7 @@ class TagTypeFactory(django_factory.DjangoModelFactory):
     title = faker.Faker("slug")
 
     class Meta:
-        model = Tag
+        model = TagType
         django_get_or_create = ("title",)
 
 
@@ -37,6 +36,7 @@ class AdviceFactory(django_factory.DjangoModelFactory):
 
     title = faker.Faker("slug")
     link = faker.Faker("uri")
+    score = fuzzy.FuzzyDecimal(0, 10, 3)
     author = SubFactory(factories.AccountFactory)
 
     class Meta:
