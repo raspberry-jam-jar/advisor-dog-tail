@@ -2,6 +2,8 @@ from rest_framework import status, mixins, viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from api.users import permissions as user_permissions
+
 from .filters import AdviceSearchFilter
 from .serializers import (
     ReadOnlyAdviceSerializer,
@@ -25,7 +27,7 @@ class AdviceViewSet(
 
     queryset = Advice.objects.order_by("-created").all()
     lookup_field = "slug"
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, user_permissions.IsAuthor)
     serializers = {
         "default": ReadOnlyAdviceSerializer,
         "create": AdviceSerializer,
@@ -49,7 +51,7 @@ class AdviceViewSet(
         detail=True,  # noqa: W605
         methods=["delete"],
         url_path="tag/(?P<tag_slug>\w+)",
-        permission_classes=(permissions.IsAuthenticated,),
+        permission_classes=(permissions.IsAuthenticated, user_permissions.IsAuthor),
     )
     def tag(self, request, tag_slug, slug=None):
         """

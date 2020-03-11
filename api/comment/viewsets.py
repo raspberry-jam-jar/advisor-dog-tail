@@ -3,6 +3,7 @@ from rest_framework import response, status, mixins, viewsets, permissions
 from rest_framework.decorators import action
 
 from api.advice.models.advice import Advice
+from api.users import permissions as user_permissions
 
 from .models import Comment
 from .serializers import (
@@ -22,7 +23,7 @@ class CommentViewSet(
     """
 
     queryset = Comment.objects.order_by("-created").all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, user_permissions.IsAuthor)
     serializers = {
         "default": CommentSerializer,
         "create": CommentSerializer,

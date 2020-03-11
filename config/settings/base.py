@@ -217,12 +217,17 @@ class BaseConfiguration(Configuration):
         "DEFAULT_AUTHENTICATION_CLASSES": [
             "rest_framework.authentication.SessionAuthentication",
             "rest_framework.authentication.TokenAuthentication",
+            "api.users.authentication.AccountAuthentication",
         ],
         "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
         "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
         "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.AcceptHeaderVersioning",
         "DEFAULT_VERSION": "1.0",
     }
+
+    # Account settings
+
+    HTTP_ACCOUNT_HEADER = env.str("HTTP_ACCOUNT_HEADER", "X-Account-Email")
 
     def __init__(self, *args, **kwargs):
         # Initialize sentry

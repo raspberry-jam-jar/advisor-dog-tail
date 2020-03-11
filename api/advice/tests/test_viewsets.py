@@ -12,6 +12,7 @@ from ..viewsets import AdviceViewSet
 from ..models.advice import Advice
 from ..models.tag import Tag
 
+from .authentication import force_account
 from .factories import AdviceFactory, TagFactory
 
 
@@ -50,6 +51,7 @@ class TestAdviceViewset:
         advice_data = {"title": new_advice.title, "link": new_advice.link}
         request = request_factory.put(f"/advices/{advice.slug}/", advice_data)
         force_authenticate(request, user=django_user)
+        force_account(request, account=advice.author)
         response = advice_vs.as_view({"put": "update"})(request, slug=advice.slug)
         assert response.status_code == HTTPStatus.OK
         assert not Advice.objects.filter(slug=advice.slug).exists()
@@ -70,6 +72,7 @@ class TestAdviceViewset:
                 field_data = {field: getattr(new_advice, field)}
                 request = request_factory.patch(f"/advices/{advice.pk}/", field_data)
                 force_authenticate(request, user=django_user)
+                force_account(request, account=advice.author)
                 response = advice_vs.as_view({"patch": "partial_update"})(
                     request, slug=advice.slug
                 )
@@ -90,6 +93,7 @@ class TestAdviceViewset:
             f"/advices/{advice.slug}/tag/{video_tag.slug}/"
         )
         force_authenticate(request, user=django_user)
+        force_account(request, account=advice.author)
         response = advice_vs.as_view({"delete": "tag"})(
             request, slug=advice.slug, tag_slug=video_tag.slug
         )
