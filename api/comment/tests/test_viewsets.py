@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APIRequestFactory, force_authenticate
 
 from api.advice.models.advice import Advice
+from api.advice.tests.authentication import force_account
 from api.users.models import Account
 
 from ..viewsets import CommentViewSet
@@ -62,7 +63,7 @@ class TestCommentViewset:
         response = comment_vs.as_view({"post": "create"})(request)
         assert response.status_code == HTTPStatus.CREATED
         assert Comment.objects.filter(
-            author=comment.author, advice=comment.advice
+            score=comment.score, author=comment.author, advice=comment.advice
         ).exists()
 
     def test_update_comment(
@@ -77,6 +78,7 @@ class TestCommentViewset:
         comment_data = {"body": new_comment.body, "score": new_comment.score}
         request = request_factory.put(f"/comments/{comment.id}/", comment_data)
         force_authenticate(request, user=django_user)
+        force_account(request, account=comment.author)
         response = comment_vs.as_view({"put": "update"})(request, pk=comment.id)
         assert response.status_code == HTTPStatus.OK
         assert Comment.objects.filter(body=new_comment.body).exists()
@@ -96,6 +98,7 @@ class TestCommentViewset:
                 field_data = {field: getattr(new_comment, field)}
                 request = request_factory.patch(f"/comments/{comment.pk}/", field_data)
                 force_authenticate(request, user=django_user)
+                force_account(request, account=comment.author)
                 response = comment_vs.as_view({"patch": "partial_update"})(
                     request, pk=comment.pk
                 )
@@ -109,6 +112,7 @@ class TestCommentViewset:
                 field_data = {field: getattr(new_comment, field)}
                 request = request_factory.patch(f"/comments/{comment.pk}/", field_data)
                 force_authenticate(request, user=django_user)
+                force_account(request, account=comment.author)
                 response = comment_vs.as_view({"patch": "partial_update"})(
                     request, pk=comment.pk
                 )
